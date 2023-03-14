@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Access\OpenWeatherApiAccess\OpenWeatherApiAccess.csproj" />
+    <ProjectReference Include="..\..\Core\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\..\Core\Types\Types.csproj" />
     <ProjectReference Include="..\..\Access\WeatherAccess\WeatherAccess.csproj" />
   </ItemGroup>

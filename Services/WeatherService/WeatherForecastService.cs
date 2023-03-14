@@ -1,4 +1,6 @@
-﻿using OpenWeatherApiAccess;
+﻿using Interfaces.Acces;
+using Interfaces.Service;
+using OpenWeatherApiAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +11,25 @@ using WeatherAccess;
 
 namespace WeatherService
 {
-    public  class WeatherForecastService
+    public  class WeatherForecastService : IWeatherForecastService
     {
-        public async Task<IEnumerable<WeatherForecast>> GetWeatherForecast(double latitude, double longitude, int days, string supplier)
+        private readonly IWeatherSupplier _dummyWeatherSupplier;
+        private readonly IWeatherSupplier _openWeatherAPISupplier;
+
+        public WeatherForecastService(IWeatherSupplier dummyWeatherSupplier, IWeatherSupplier openWeatherAPISupplier)
         {
-            //Note: service is tightly coupled to both dummy and openweather supplier
-            WeatherSupplierBase? weather = null;
-            if (supplier == nameof(DummyWeatherSupplier)) weather = new DummyWeatherSupplier();
-            if (supplier == nameof(OpenWeatherAPISupplier)) weather = new OpenWeatherAPISupplier();
+            _dummyWeatherSupplier = dummyWeatherSupplier;
+            _openWeatherAPISupplier = openWeatherAPISupplier;
+        }
+
+        public async Task<IEnumerable<WeatherForecast>> GetWeatherForecast(WeatherForecastCriteria criteria)
+        {
+            IWeatherSupplier? weather = null;
+            //NOTE: using magic strings to remove dependency on specific classes. Not a better solution!
+            if (criteria.Supplier == "DummyWeatherSupplier") weather = _dummyWeatherSupplier;
+            if (criteria.Supplier == "OpenWeatherAPISupplier") weather = _openWeatherAPISupplier;
             if (weather == null) throw new NullReferenceException("Please specify an existing weather supplier!");
-            return await weather.GetWeatherForecast(latitude, longitude, days);
+            return await weather.GetWeatherForecast(criteria);
         }
     }
 }
