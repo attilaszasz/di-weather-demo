@@ -17,19 +17,19 @@ public class WeatherForecastController : ControllerBase
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
-    public async Task<IEnumerable<WeatherForecast>> Get(int days = 8)
+    public async Task<IEnumerable<WeatherForecast>> Get(double latitude = 46.542679, double longitude = 24.557859, int days = 8, string supplier = "DummyWeatherSupplier")
     {
         try
         {
             //Note: controller is tightly coupled to WeatherForecastService.
             var service = new WeatherForecastService();
-            var result = await service.GetWeatherForecast(days);
-            logger.Information("Responded weather request {@params} with {@data}", days, result);
+            var result = await service.GetWeatherForecast(latitude, longitude, days, supplier);
+            logger.Information("Responded weather request {@params} with {@data}", new { latitude, longitude, days }, result);
             return result;
         } 
         catch (Exception ex)
         {
-            logger.Error(ex, "Error while getting weather info. Input {@params}", days);
+            logger.Error(ex, "Error while getting weather info. Input {@params}", new { latitude, longitude, days });
             return Enumerable.Empty<WeatherForecast>();
         }
     }

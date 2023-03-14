@@ -6,9 +6,10 @@ namespace WeatherService.Tests
         [TestMethod]
         public async Task TestSingleResult()
         {
-            //Note: this will test with the hardcoded DummyWeatherSupplier
             var service = new WeatherForecastService();
-            var results = await service.GetWeatherForecast(days: 1);
+
+            //NOTE: we cannot test WeatherForecastService in isolation because the weather suppliers are tightly coupled to it
+            var results = await service.GetWeatherForecast(46.542679, 24.557859, 1, "DummyWeatherSupplier");
             Assert.IsNotNull(results);
             Assert.AreEqual(1, results.Count());
         }

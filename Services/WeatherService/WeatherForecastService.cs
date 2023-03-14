@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenWeatherApiAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,14 @@ namespace WeatherService
 {
     public  class WeatherForecastService
     {
-        public async Task<IEnumerable<WeatherForecast>> GetWeatherForecast(int days)
+        public async Task<IEnumerable<WeatherForecast>> GetWeatherForecast(double latitude, double longitude, int days, string supplier)
         {
-            //Note: service is tightly coupled to dummy supplier
-            var supplier = new DummyWeatherSupplier();
-            return await supplier.GetWeatherForecast(days);
+            //Note: service is tightly coupled to both dummy and openweather supplier
+            WeatherSupplierBase? weather = null;
+            if (supplier == nameof(DummyWeatherSupplier)) weather = new DummyWeatherSupplier();
+            if (supplier == nameof(OpenWeatherAPISupplier)) weather = new OpenWeatherAPISupplier();
+            if (weather == null) throw new NullReferenceException("Please specify an existing weather supplier!");
+            return await weather.GetWeatherForecast(latitude, longitude, days);
         }
     }
 }
