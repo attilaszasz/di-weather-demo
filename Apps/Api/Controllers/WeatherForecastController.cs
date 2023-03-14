@@ -25,8 +25,8 @@ public class WeatherForecastController : ControllerBase
                                     openWeatherAPISupplier: new OpenWeatherAPISupplier(new ConfigurationBuilder().AddUserSecrets("5260b863-91bc-46e7-adfb-b225ff3f690b").Build()));
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
-    public async Task<IEnumerable<WeatherForecast>> Get(WeatherForecastCriteria criteria)
+    [HttpPost(Name = "GetWeatherForecast")]
+    public async Task<IEnumerable<WeatherForecast>> Post(WeatherForecastCriteria criteria)
     {
         try
         {
